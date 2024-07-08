@@ -6,7 +6,7 @@ import multiprocessing
 import time
 
 # Set the number of cores to use
-NUM_CORES = multiprocessing.cpu_count() 
+NUM_CORES = multiprocessing.cpu_count() * 4 
 # Load stock info
 stock_info = pd.read_csv('src/stock_info.csv')
 
@@ -91,7 +91,7 @@ def process_ticker(ticker, period='5d'):
     dividend_yield = ticker_info.get('dividendYield', None)
     avg_volume = ticker_info.get('averageVolume', None)
 
-    result = [company_name, ticker, current_date, current_price, open_price, previous_price, price_change, beta, pe_ratio, market_cap, sector, fifty_two_week_high, fifty_two_week_low, dividend_yield, avg_volume, rsi_score, macd, macd_signal, macd_hist]
+    result = [company_name, ticker, sector, current_date, current_price, open_price, previous_price, price_change, beta, pe_ratio, market_cap, fifty_two_week_high, fifty_two_week_low, dividend_yield, avg_volume, rsi_score, macd, macd_signal, macd_hist]
     return result, ticker, price_change
 
 def process_chunk(chunk):
@@ -113,7 +113,7 @@ def evaluate():
                 processed_tickers.append(result)
     
     # Save all processed tickers with their metrics
-    columns = ["Company", "Ticker", "Date", "Current Close", "Open", "Previous Close", "Price Change (%)", "Beta", "P/E Ratio", "Market Cap", "Sector", "52-Week High", "52-Week Low", "Dividend Yield", "Average Volume", "RSI Score", "MACD", "MACD Signal", "MACD Hist"]    
+    columns = ["Company", "Ticker", "Sector", "Date", "Current Close", "Open", "Previous Close", "Price Change (%)", "Beta", "P/E Ratio", "Market Cap", "52-Week High", "52-Week Low", "Dividend Yield", "Average Volume", "RSI Score", "MACD", "MACD Signal", "MACD Hist"]    
     processed_df = pd.DataFrame(processed_tickers, columns=columns)
 
     return processed_df
