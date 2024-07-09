@@ -1,6 +1,7 @@
 import os, multiprocessing, logging
 import yfinance as yf
 import pandas as pd
+import numpy as np
 from concurrent.futures import ProcessPoolExecutor
 
 # Suppress the error message from yfinance in case the ticker is not available
@@ -9,7 +10,7 @@ logger.disabled = True
 logger.propagate = False
 
 # Set the number of cores to use
-NUM_CORES = multiprocessing.cpu_count() * 4
+NUM_CORES = multiprocessing.cpu_count() * 2
 
 # Load stock info
 stock_info = pd.read_csv('src/stock_info.csv')
@@ -53,43 +54,31 @@ def calculate_price_change(current_price, previous_close):
     price_change = (current_price - previous_close) / previous_close * 100
     return round(price_change, 3)
 
-def calculate_rsi(data, period=14):
+def calculate_rsi(data, periods=14):
     """
     Calculate the Relative Strength Index (RSI) for a given set of price data.
 
     Args:
-        data (pd.DataFrame): A DataFrame containing the 'Close' column with price data.
-        period (int): The number of periods to use for the RSI calculation.
+        data (pd.Series): A Series containing the closing prices.
+        periods (int): The number of periods to use for RSI calculation (default is 14).
 
     Returns:
-        float: The RSI value.
+        float: The RSI value for the most recent period.
     """
-    delta = data['Close'].diff(1)
-    up = delta.copy()
-    down = delta.copy()
-    up[up < 0] = 0
-    down[down > 0] = 0
-    avg_gain = up.ewm(com=period-1, adjust=False).mean()
-    avg_loss = down.ewm(com=period-1, adjust=False).mean().abs()
-    rs = avg_gain / avg_loss
-    rsi = 100 - (100 / (1 + rs))
+    delta = data.diff()
+
+    # Make two series: one for lower closes and one for higher closes
+    up = delta.clip(lower=0)
+    down = -1 * delta.clip(upper=0)
+    
+    # Calculate the EWMA
+    ma_up = up.ewm(com = periods - 1, adjust=False).mean()
+    ma_down = down.ewm(com = periods - 1, adjust=False).mean()
+
+    rsi = ma_up / ma_down
+    rsi = 100 - (100/(1 + rsi))
+
     return rsi.iloc[-1]
-
-def calculate_macd(data):
-    """
-    Calculate the Moving Average Convergence Divergence (MACD) for a given set of price data.
-
-    Args:
-        data (pd.DataFrame): A DataFrame containing the 'Close' column with price data.
-
-    Returns:
-        tuple: The MACD, MACD signal line, and MACD histogram values.
-    """
-    exp1 = data['Close'].ewm(span=12, adjust=False).mean()
-    exp2 = data['Close'].ewm(span=26, adjust=False).mean()
-    macd = exp1 - exp2
-    signal = macd.ewm(span=9, adjust=False).mean()
-    return macd.iloc[-1], signal.iloc[-1], macd.iloc[-1] - signal.iloc[-1]
 
 def process_ticker(ticker):
     """
@@ -102,8 +91,14 @@ def process_ticker(ticker):
         tuple: A tuple containing the calculated metrics, the ticker, and the price change percentage.
     """
     try:
-        ticker_info = yf.Ticker(ticker).info
+        stock = yf.Ticker(ticker)
+        ticker_info = stock.info
         if 'currentPrice' not in ticker_info or 'previousClose' not in ticker_info:
+            return None, ticker, None
+
+        # Fetch historical data for RSI calculation
+        hist_data = stock.history(period="1mo")
+        if len(hist_data) < 14:  # We need at least 14 days of data for RSI
             return None, ticker, None
 
         company_name = get_company_name(ticker)
@@ -120,12 +115,11 @@ def process_ticker(ticker):
         avg_volume = ticker_info.get('averageVolume', None)
 
         price_change = calculate_price_change(current_price, previous_close)
-        rsi_score = calculate_rsi(pd.DataFrame({'Close': [current_price]}))
-        macd, macd_signal, macd_hist = calculate_macd(pd.DataFrame({'Close': [current_price]}))
+        rsi_score = calculate_rsi(hist_data['Close'])
 
-        result = [company_name, ticker, sector, current_price, open_price, previous_close, price_change, beta, pe_ratio, market_cap, fifty_two_week_high, fifty_two_week_low, dividend_yield, avg_volume, rsi_score, macd, macd_signal, macd_hist]
+        result = [company_name, ticker, sector, current_price, open_price, previous_close, price_change, beta, pe_ratio, market_cap, fifty_two_week_high, fifty_two_week_low, dividend_yield, avg_volume, rsi_score]
         return result, ticker, price_change
-    except Exception:
+    except Exception as e:
         return None, ticker, None
 
 def process_chunk(chunk):
@@ -158,11 +152,11 @@ def evaluate():
     
     for chunk_result in results:
         for result, ticker, price_change in chunk_result:
-            if ticker and price_change is not None:
+            if result is not None:
                 processed_tickers.append(result)
     
     # Save all processed tickers with their metrics
-    columns = ["Company", "Ticker", "Sector", "Current Close", "Open", "Previous Close", "Price Change (%)", "Beta", "P/E Ratio", "Market Cap", "52-Week High", "52-Week Low", "Dividend Yield", "Average Volume", "RSI Score", "MACD", "MACD Signal", "MACD Hist"]    
+    columns = ["Company", "Ticker", "Sector", "Current Close", "Open", "Previous Close", "Price Change (%)", "Beta", "P/E Ratio", "Market Cap", "52-Week High", "52-Week Low", "Dividend Yield", "Average Volume", "RSI Score"]    
     processed_df = pd.DataFrame(processed_tickers, columns=columns)
 
     return processed_df

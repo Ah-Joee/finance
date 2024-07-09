@@ -1,6 +1,7 @@
 import pandas as pd
 import asyncio
 import multiprocessing
+import time
 from src.stock_info import evaluate, mkdir
 from src.buy import score_stocks
 from src.grok import grok
@@ -9,14 +10,15 @@ from src.query import query
 
 
 async def main():
-    print('\n<<< Stocks data fetching >>>\n')
+    print('\n<<< Stocks data fetching >>>')
+    start_time = time.time()
     df = evaluate()
+    end_time = time.time()
+    print(f"Fetching time: {end_time - start_time}\n\n")
     
-    print('<<< Customized score calculating >>>\n')
     # Score and rank stocks
     df_scored = score_stocks(df)
     
-    print("<<< Choosing top 10 stocks >>>\n")
     # Select top 10 stocks
     top_10_stocks = df_scored.head(10)
     
