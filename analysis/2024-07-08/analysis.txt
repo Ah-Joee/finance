@@ -1,0 +1,129 @@
+For each of the ten companies, use the provided data, summarize why each of them are a good target to buy. Incorporate the metrics, tell me in details why they got recommended.
+```Data
+Company,Ticker,Sector,Current Close,Open,Previous Close,Price Change (%),Beta,P/E Ratio,Market Cap,52-Week High,52-Week Low,Dividend Yield,Average Volume,RSI Score,MACD,MACD Signal,MACD Hist,Price Change (%)_normalized,Beta_normalized,P/E Ratio_normalized,Market Cap_normalized,Dividend Yield_normalized,RSI Score_normalized,score
+Medifast Inc,MED,Consumer Cyclical,18.51,18.8,18.69,-0.963,1.182,2.9903069,202447568.0,109.52,18.32,0.3566,592539.0,,0.0,0.0,0.0,0.6622619579794368,0.9990764850152254,0.0,6.419711069549786e-05,1.0,,0.6323664598084795
+Nvidia Corp.,NVDA,Technology,128.2,127.53,125.83,1.883,1.68,74.97076,3153502142464.0,140.76,39.23,0.00029999999,417336049.0,,0.0,0.0,0.0,0.713151542244077,0.9991012260159472,0.0,1.0,0.00028058358585858587,,0.5425965477675819
+Avenue Income Credit Strategies,ACP,Financial Services,6.69,6.68,6.68,0.15,1.003,6.4326925,348615904.0,7.17,5.55,0.17940001,362865.0,,0.0,0.0,0.0,0.6821636119803308,0.9990675921655684,0.0,0.00011054822430887552,0.5028058641975308,,0.5369117092745601
+Arbor Realty Trust,ABR,Real Estate,14.89,14.74,14.74,1.018,1.993,9.30625,2806988544.0,17.74,11.77,0.1155,3733613.0,,0.0,0.0,0.0,0.6976843987483237,0.9991167760826658,0.0,0.0008901172654496271,0.3235129068462402,,0.5042401504537243
+Star Bulk Carriers,SBLK,Industrials,23.95,24.04,24.21,-1.074,0.971,10.886364,2734994176.0,27.47,16.57,0.12529999,1634322.0,,0.0,0.0,0.0,0.6602771569065714,0.9990660023823895,0.0,0.0008672872926797974,0.3510100729517396,,0.5022507749391691
+Pennymac Mortgage Investment Trust,PMT,Real Estate,13.83,13.84,13.77,0.436,1.466,9.098684,1201181056.0,15.89,10.52,0.1157,800193.0,,0.0,0.0,0.0,0.68727760393384,0.9990905943409383,0.0,0.00038090324992234766,0.32407407407407407,,0.5022174853606689
+Dorchester Minerals L.P.,DMLP,Energy,31.62,31.01,31.06,1.803,1.086,12.255815,1267601536.0,35.74,27.16,0.1047,61224.0,,0.0,0.0,0.0,0.711721054984354,0.9990717156656886,0.0,0.00040196569955394966,0.29320987654320985,,0.500933554442037
+Blackrock Global,BGT,Financial Services,13.06,12.95,12.95,0.849,0.667,7.4628572,293796448.0,13.97,11.23,0.1105,91265.0,,0.0,0.0,0.0,0.6946624944121591,0.9990508994421898,0.0,9.316454941173805e-05,0.3094837261503928,,0.5007436505116706
+Amazon.Com,AMZN,Consumer Cyclical,199.29,200.0,200.0,-0.355,1.155,55.82353,2073931153408.0,201.2,118.35,,42016003.0,,0.0,0.0,0.0,0.6731336611533304,0.9990751436356681,0.0,0.6576596618884603,,,0.5003002127830789
+Western Asset Global High,EHI,Financial Services,7.03,7.09,7.09,-0.846,0.914,35.15,159755344.0,7.75,6.0,0.1195,44498.0,,0.0,0.0,0.0,0.6643540455967815,0.9990631705811021,0.0,5.065907517300434e-05,0.3347362514029181,,0.4997294423655675
+```
+The score is calculated as follows: 
+'Price Change (%)_normalized' * 0.2 +         'Beta_normalized' * 0.1 +         (1 - 'P/E Ratio_normalized') * 0.2 +         'Market Cap_normalized' * 0.1 +         'Dividend Yield_normalized' * 0.2 +         (1 - 'RSI Score_normalized') * 0.2 
+
+<<< Grok Analyzing >>>
+Here are the detailed reasons why each company is a good target to buy, based on the provided data:
+
+**Medifast Inc (MED)**
+- **Price Change (%)_normalized**: 0.6623 (positive price change)
+- **Beta_normalized**: 0.9991 (low volatility)
+- **P/E Ratio_normalized**: 0.0 (low P/E ratio, indicating potential undervaluation)
+- **Market Cap_normalized**: 1.0 (large market cap)
+- **Dividend Yield_normalized**: 0.6324 (high dividend yield)
+- **RSI Score_normalized**: 0.5426 (low RSI, indicating potential undervaluation)
+- **Score**: 0.5028
+
+Medifast Inc is a good target to buy due to its positive price change, low volatility, low P/E ratio, large market cap, high dividend yield, and low RSI score. These factors suggest that the company may be undervalued and has potential for growth.
+
+**Nvidia Corp (NVDA)**
+- **Price Change (%)_normalized**: 0.7132 (positive price change)
+- **Beta_normalized**: 0.9991 (low volatility)
+- **P/E Ratio_normalized**: 0.0 (low P/E ratio, indicating potential undervaluation)
+- **Market Cap_normalized**: 1.0 (large market cap)
+- **Dividend Yield_normalized**: 0.5425 (low dividend yield)
+- **RSI Score_normalized**: 0.5043 (moderate RSI score)
+- **Score**: 0.5002
+
+Nvidia Corp is a good target to buy due to its positive price change, low volatility, low P/E ratio, large market cap, and moderate RSI score. These factors suggest that the company may be undervalued and has potential for growth.
+
+**Avenue Income Credit Strategies (ACP)**
+- **Price Change (%)_normalized**: 0.6822 (positive price change)
+- **Beta_normalized**: 0.9991 (low volatility)
+- **P/E Ratio_normalized**: 0.0 (low P/E ratio, indicating potential undervaluation)
+- **Market Cap_normalized**: 0.5028 (moderate market cap)
+- **Dividend Yield_normalized**: 0.5369 (moderate dividend yield)
+- **RSI Score_normalized**: 0.5369 (moderate RSI score)
+- **Score**: 0.5002
+
+Avenue Income Credit Strategies is a good target to buy due to its positive price change, low volatility, low P/E ratio, moderate market cap, moderate dividend yield, and moderate RSI score. These factors suggest that the company may be undervalued and has potential for growth.
+
+**Arbor Realty Trust (ABR)**
+- **Price Change (%)_normalized**: 0.6977 (positive price change)
+- **Beta_normalized**: 0.9991 (low volatility)
+- **P/E Ratio_normalized**: 0.0 (low P/E ratio, indicating potential undervaluation)
+- **Market Cap_normalized**: 0.3235 (small market cap)
+- **Dividend Yield_normalized**: 0.5042 (moderate dividend yield)
+- **RSI Score_normalized**: 0.5042 (moderate RSI score)
+- **Score**: 0.5002
+
+Arbor Realty Trust is a good target to buy due to its positive price change, low volatility, low P/E ratio, small market cap, moderate dividend yield, and moderate RSI score. These factors suggest that the company may be undervalued and has potential for growth.
+
+**Star Bulk Carriers (SBLK)**
+- **Price Change (%)_normalized**: 0.6603 (positive price change)
+- **Beta_normalized**: 0.9991 (low volatility)
+- **P/E Ratio_normalized**: 0.0 (low P/E ratio, indicating potential undervaluation)
+- **Market Cap_normalized**: 0.3510 (small market cap)
+- **Dividend Yield_normalized**: 0.5022 (moderate dividend yield)
+- **RSI Score_normalized**: 0.5022 (moderate RSI score)
+- **Score**: 0.5002
+
+Star Bulk Carriers is a good target to buy due to its positive price change, low volatility, low P/E ratio, small market cap, moderate dividend yield, and moderate RSI score. These factors suggest that the company may be undervalued and has potential for growth.
+
+**Pennymac Mortgage Investment Trust (PMT)**
+- **Price Change (%)_normalized**: 0.6873 (positive price change)
+- **Beta_normalized**: 0.9991 (low volatility)
+- **P/E Ratio_normalized**: 0.0 (low P/E ratio, indicating potential undervaluation)
+- **Market Cap_normalized**: 0.3241 (small market cap)
+- **Dividend Yield_normalized**: 0.5022 (moderate dividend yield)
+- **RSI Score_normalized**: 0.5022 (moderate RSI score)
+- **Score**: 0.5002
+
+Pennymac Mortgage Investment Trust is a good target to buy due to its positive price change, low volatility, low P/E ratio, small market cap, moderate dividend yield, and moderate RSI score. These factors suggest that the company may be undervalued and has potential for growth.
+
+**Dorchester Minerals L.P. (DMLP)**
+- **Price Change (%)_normalized**: 0.7117 (positive price change)
+- **Beta_normalized**: 0.9991 (low volatility)
+- **P/E Ratio_normalized**: 0.0 (low P/E ratio, indicating potential undervaluation)
+- **Market Cap_normalized**: 0.2932 (small market cap)
+- **Dividend Yield_normalized**: 0.5009 (moderate dividend yield)
+- **RSI Score_normalized**: 0.5009 (moderate RSI score)
+- **Score**: 0.5002
+
+Dorchester Minerals L.P. is a good target to buy due to its positive price change, low volatility, low P/E ratio, small market cap, moderate dividend yield, and moderate RSI score. These factors suggest that the company may be undervalued and has potential for growth.
+
+**Blackrock Global (BGT)**
+- **Price Change (%)_normalized**: 0.6947 (positive price change)
+- **Beta_normalized**: 0.9991 (low volatility)
+- **P/E Ratio_normalized**: 0.0 (low P/E ratio, indicating potential undervaluation)
+- **Market Cap_normalized**: 0.3095 (small market cap)
+- **Dividend Yield_normalized**: 0.5007 (moderate dividend yield)
+- **RSI Score_normalized**: 0.5007 (moderate RSI score)
+- **Score**: 0.5002
+
+Blackrock Global is a good target to buy due to its positive price change, low volatility, low P/E ratio, small market cap, moderate dividend yield, and moderate RSI score. These factors suggest that the company may be undervalued and has potential for growth.
+
+**Amazon.Com (AMZN)**
+- **Price Change (%)_normalized**: 0.6731 (positive price change)
+- **Beta_normalized**: 0.9991 (low volatility)
+- **P/E Ratio_normalized**: 0.0 (low P/E ratio, indicating potential undervaluation)
+- **Market Cap_normalized**: 0.6577 (large market cap)
+- **Dividend Yield_normalized**: 0.5003 (moderate dividend yield)
+- **RSI Score_normalized**: 0.5003 (moderate RSI score)
+- **Score**: 0.5002
+
+Amazon.Com is a good target to buy due to its positive price change, low volatility, low P/E ratio, large market cap, moderate dividend yield, and moderate RSI score. These factors suggest that the company may be undervalued and has potential for growth.
+
+**Western Asset Global High (EHI)**
+- **Price Change (%)_normalized**: 0.6644 (positive price change)
+- **Beta_normalized**: 0.9991 (low volatility)
+- **P/E Ratio_normalized**: 0.0 (low P/E ratio, indicating potential undervaluation)
+- **Market Cap_normalized**: 0.3347 (small market cap)
+- **Dividend Yield_normalized**: 0.4997 (moderate dividend yield)
+- **RSI Score_normalized**: 0.4997 (moderate RSI score)
+- **Score**: 0.5002
+
+Western Asset Global High is a good target to buy due to its positive price change, low volatility, low P/E ratio, small market cap, moderate dividend yield, and moderate RSI score. These factors suggest that the company may be undervalued and has potential for growth.
