@@ -6,7 +6,7 @@ import multiprocessing
 import time
 
 # Set the number of cores to use
-NUM_CORES = multiprocessing.cpu_count() * 4 
+NUM_CORES = multiprocessing.cpu_count() * 4
 # Load stock info
 stock_info = pd.read_csv('src/stock_info.csv')
 
