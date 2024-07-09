@@ -8,21 +8,20 @@ import time
 # Set the number of cores to use
 NUM_CORES = multiprocessing.cpu_count() * 4
 # Load stock info
-stock_info = pd.read_csv('src/stock_info.csv')
+stock_info = pd.read_csv('src/stock_info.csv')[:100]
 
 def mkdir(directory_path):
     if not os.path.exists(directory_path):
         os.makedirs(directory_path)
 
-def get_stock_data(ticker, period='5d'):
+def get_stock_data(ticker, period='1mo'):
     try:  
         time.sleep(0.1)
-        data = yf.download(ticker, period=period, interval='1d')  
+        data = yf.download(ticker, period=period, progress=False)
         if 'Date' not in data.columns:
             data['Date'] = data.index
         return ticker, data  
-    except Exception as e:
-        print(f"Error downloading data for {ticker}: {e}")
+    except Exception:
         return ticker, None
 
 def calculate_price_change(data):
@@ -60,7 +59,7 @@ def get_ticker_info(ticker):
     info = yf.Ticker(ticker).info
     return info
 
-def process_ticker(ticker, period='5d'):
+def process_ticker(ticker, period='1mo'):
     ticker, data = get_stock_data(ticker, period)
     if data is None or data.empty:
         return None, ticker, None
@@ -115,5 +114,6 @@ def evaluate():
     # Save all processed tickers with their metrics
     columns = ["Company", "Ticker", "Sector", "Date", "Current Close", "Open", "Previous Close", "Price Change (%)", "Beta", "P/E Ratio", "Market Cap", "52-Week High", "52-Week Low", "Dividend Yield", "Average Volume", "RSI Score", "MACD", "MACD Signal", "MACD Hist"]    
     processed_df = pd.DataFrame(processed_tickers, columns=columns)
+
 
     return processed_df

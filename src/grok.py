@@ -1,4 +1,5 @@
 import xai_sdk
+import sys
 
 async def grok(query):
     """
@@ -13,11 +14,16 @@ async def grok(query):
             iterable that emits the individual string tokens of the newly sampled reseponse and
             `response` is a future that resolves to the Rsponse object created. 
     """
-    
-    
     client = xai_sdk.Client()
+    conversation = client.grok.create_conversation()
+    token_stream, _ = conversation.add_response(query)
     response = ""
 
-    async for token in client.sampler.sample(prompt="", inputs=(query,), max_len=2000):
-        response += (token.token_str)
+
+    print('\n<<< Grok >>>\n')
+    async for token in token_stream:
+        print(token, end="")
+        response += token
+        sys.stdout.flush()
+
     return response

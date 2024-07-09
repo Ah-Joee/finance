@@ -39,7 +39,7 @@ async def main():
     response += await grok(q)
     with open(f'{str(today)}/analysis.txt', "a", encoding='UTF-8') as my_output_file:
         my_output_file.write(response)
-    print(response)
+    print('\n')
 
 if __name__ == '__main__':
     multiprocessing.freeze_support()  # This is necessary for Windows compatibility

@@ -3,7 +3,8 @@ import pandas as pd
 def query():
     today = pd.Timestamp('today').date()
     q = 'The provided data is the ten recommended buy stocks. '
-    q += 'Explain to me why they are good targets to buy. Explain one by one and use only the provided data.'  
+    q += 'Explain to me why they are good targets to buy. '
+    q += "For each of the 10 companies, give me a brief summaries when it is a good target to buy."
     q += '\n```Data'
     
     with open(f'{str(today)}/top_10_stocks.csv', 'r') as f:
