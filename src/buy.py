@@ -1,16 +1,37 @@
 import pandas as pd
 import numpy as np
 
+def read_existing_portfolio(file_path):
+    try:
+        portfolio = pd.read_csv(file_path)
+        return set(portfolio['Ticker'])
+    except FileNotFoundError:
+        print(f"Warning: Portfolio file '{file_path}' not found. Proceeding without portfolio weighting.")
+        return set()
+
+def read_sector_weights(file_path):
+    try:
+        weights_df = pd.read_csv(file_path, index_col='Sector')
+        return weights_df.to_dict('index')
+    except FileNotFoundError:
+        print(f"Error: Sector weights file '{file_path}' not found. Cannot proceed.")
+        raise
+
+sector_weights = read_sector_weights('src/sector_weights.csv')
+
 def score_stocks(df):
     """
     Score stocks based on various financial metrics, using raw values for P/E ratio and price change.
-    Applies sector-specific scoring for all sectors.
+    Applies sector-specific scoring for all sectors and includes existing portfolio weighting.
     """
+    # Read existing portfolio
+    existing_portfolio = read_existing_portfolio('src/your_portfolio.csv')
+    
     # Define the columns we'll use for scoring
     numerical_cols = ['Price Change (%)', 'Beta', 'P/E Ratio', 'Market Cap', 'Dividend Yield', 'RSI Score', 'Sector']
     
     # Remove stocks with any missing values in the relevant columns
-    df_complete = df.dropna(subset=numerical_cols).copy()  # Create an explicit copy
+    df_complete = df.dropna(subset=numerical_cols).copy()
     
     # Normalize numerical columns (except P/E Ratio and Price Change)
     for col in ['Beta', 'Market Cap', 'Dividend Yield', 'RSI Score']:
@@ -30,16 +51,16 @@ def score_stocks(df):
     df_complete['P/E Ratio'] = pd.to_numeric(df_complete['P/E Ratio'], errors='coerce')
     df_complete['Price Change (%)'] = pd.to_numeric(df_complete['Price Change (%)'], errors='coerce')
 
-    # Apply sector-specific scoring
-    df_complete['score'] = df_complete.apply(lambda row: calculate_score(row), axis=1)
+    # Apply sector-specific scoring and include portfolio weighting
+    df_complete['score'] = df_complete.apply(lambda row: calculate_score(row, existing_portfolio), axis=1)
     
     return df_complete.sort_values('score', ascending=False)
 
-def calculate_score(row):
-    """Calculate the score for a single stock based on its sector."""
+def calculate_score(row, existing_portfolio):
+    """Calculate the score for a single stock based on its sector and existing portfolio."""
     weights = sector_weights.get(row['Sector'], sector_weights['Other'])
     
-    return (
+    base_score = (
         row['Price Change (%)'] * weights['price_change'] +
         (1 - row['Beta_normalized']) * weights['beta'] +
         (20 / row['P/E Ratio']) * weights['pe_ratio'] +
@@ -47,6 +68,12 @@ def calculate_score(row):
         row['Dividend Yield_normalized'] * weights['dividend_yield'] +
         (0.5 - abs(row['RSI Score_normalized'] - 0.5)) * weights['rsi']
     )
+    
+    # Multiply score by 1.05 if the stock is in the existing portfolio
+    portfolio_multiplier = 1.05 if row['Ticker'] in existing_portfolio else 1.0
+    
+    return base_score * portfolio_multiplier
+
 def get_buy_recommendations(df, sector_counts):
     """
     Get top stock buy recommendations based on user-specified counts for each sector.
@@ -56,10 +83,7 @@ def get_buy_recommendations(df, sector_counts):
     recommendations = pd.DataFrame()
 
     for category, top_n in sector_counts.items():
-        if category != 'Other':
-            category_df = scored_df[scored_df['Sector'] == category]
-        else:
-            category_df = scored_df[~scored_df['Sector'].isin(['Technology', 'Financial Services', 'Consumer Cyclical'])]
+        category_df = scored_df[scored_df['Sector'] == category]
         
         category_recommendations = category_df[
             (category_df['Beta'] < 1.5) &  # Filter out extremely volatile stocks
@@ -81,10 +105,10 @@ def analyze_recommendations(df, sector_counts):
         analysis += f"{sector} Sector:\n"
         analysis += f"Score = (Price Change (%) * {weights['price_change']:.2f}) + \n"
         analysis += f"        (Beta_normalized * {weights['beta']:.2f}) + \n"
-        analysis += f"        ((15 / P/E Ratio) * {weights['pe_ratio']:.2f}) + \n"
+        analysis += f"        ((20 / P/E Ratio) * {weights['pe_ratio']:.2f}) + \n"
         analysis += f"        (Market Cap_normalized * {weights['market_cap']:.2f}) + \n"
         analysis += f"        (Dividend Yield_normalized * {weights['dividend_yield']:.2f}) + \n"
-        analysis += f"        ((1 - |RSI Score_normalized - 0.7|) * {weights['rsi']:.2f})\n\n"
+        analysis += f"        ((0.5 - |RSI Score_normalized - 0.5|) * {weights['rsi']:.2f})\n\n"
 
     analysis += "Top Stock Recommendations by Sector:\n\n"
     
@@ -95,40 +119,3 @@ def analyze_recommendations(df, sector_counts):
         analysis += table + "\n\n"
     
     return analysis
-
-# Global variable for sector weights
-# Global variable for sector weights
-sector_weights = {
-    'Technology': {
-        'price_change': 0.35,  # Increased
-        'beta': 0.15,          # Increased
-        'pe_ratio': 0.05,      # Decreased
-        'market_cap': 0.15,    # Decreased
-        'dividend_yield': 0.05,# Kept low
-        'rsi': 0.25            # Increased
-    },
-    'Financial Services': {
-        'price_change': 0.30,  # Increased
-        'beta': 0.15,          # Increased
-        'pe_ratio': 0.15,      # Decreased
-        'market_cap': 0.10,    # Decreased
-        'dividend_yield': 0.10,# Decreased
-        'rsi': 0.20            # Increased
-    },
-    'Consumer Cyclical': {
-        'price_change': 0.35,  # Increased
-        'beta': 0.20,          # Increased
-        'pe_ratio': 0.10,      # Decreased
-        'market_cap': 0.05,    # Decreased
-        'dividend_yield': 0.10,# Decreased
-        'rsi': 0.20            # Increased
-    },
-    'Other': {
-        'price_change': 0.30,  # Increased
-        'beta': 0.15,          # Increased
-        'pe_ratio': 0.15,      # Decreased
-        'market_cap': 0.10,    # Decreased
-        'dividend_yield': 0.10,# Decreased
-        'rsi': 0.20            # Increased
-    }
-}

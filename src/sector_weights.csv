@@ -1,0 +1,13 @@
+Sector,price_change,beta,pe_ratio,market_cap,dividend_yield,rsi
+Basic Materials,0.35,0.25,0.10,0.10,0.10,0.10
+Communication Services,0.40,0.25,0.10,0.10,0.05,0.10
+Consumer Cyclical,0.40,0.30,0.05,0.05,0.05,0.15
+Consumer Defensive,0.30,0.20,0.15,0.15,0.10,0.10
+Energy,0.35,0.25,0.10,0.10,0.10,0.10
+Financial Services,0.35,0.25,0.10,0.10,0.10,0.10
+Healthcare,0.35,0.20,0.15,0.15,0.05,0.10
+Industrials,0.35,0.25,0.10,0.10,0.10,0.10
+Real Estate,0.30,0.20,0.15,0.15,0.10,0.10
+Technology,0.40,0.25,0.05,0.10,0.05,0.15
+Utilities,0.25,0.15,0.20,0.20,0.10,0.10
+Other,0.35,0.25,0.10,0.10,0.10,0.10

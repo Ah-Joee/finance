@@ -11,10 +11,15 @@ async def main():
 
     df = pd.read_csv(f"analysis/{str(today)}/processed_tickers.csv")
 
-    print("<<< # from each Sectors >>>\n")
+    print("\n<<< Sectors >>>\n")
     # Get user input for number of companies from each sector
+    sectors = [
+        'Basic Materials', 'Communication Services', 'Consumer Cyclical',
+        'Consumer Defensive', 'Energy', 'Financial Services', 'Healthcare',
+        'Industrials', 'Real Estate', 'Technology', 'Utilities', 'Other'
+    ]
     sector_counts = {}
-    for sector in ['Technology', 'Consumer Cyclical', 'Financial Services', 'Other']:
+    for sector in sectors:
         while True:
             try:
                 count = int(input(f"How many companies do you want from the {sector} sector? "))
@@ -28,7 +33,9 @@ async def main():
 
     # Get top recommendations
     top_stocks = get_buy_recommendations(df, sector_counts)
+   
     
+    # Save all processed tickers
 
     # Save top stocks
     top_stocks_file = f'analysis/{str(today)}/top_stocks.csv'
@@ -40,15 +47,16 @@ async def main():
 
     # Generate and save detailed analysis
     analysis = analyze_recommendations(df, sector_counts)
-    with open(f'analysis/{str(today)}/detailed_analysis.txt', "w", encoding='UTF-8') as analysis_file:
+    with open(f'analysis/{str(today)}/analysis.md', "w", encoding='UTF-8') as analysis_file:
         analysis_file.write(analysis)
 
     q = query(sector_counts)
     response = '\n<<< Grok Analyzing >>>\n'
     response += await grok(q)
-    with open(f'analysis/{str(today)}/grok_analysis.txt', "a", encoding='UTF-8') as grok_file:
+    with open(f'analysis/{str(today)}/analysis.md', "a", encoding='UTF-8') as grok_file:
         grok_file.write(response)
     print('\n')
 
 if __name__ == '__main__':
+
     asyncio.run(main())

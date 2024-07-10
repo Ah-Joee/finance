@@ -1,0 +1,222 @@
+Put all the companies in a number list. Within each one, write a summary why they are good targets to buy using only the data provided below.
+
+```Data
+Ticker,Company,Sector,Current Close,Price Change (%),P/E Ratio,Dividend Yield,RSI Score,score
+GPK,Graphic Packaging Holdings Company,Consumer Cyclical,26.195,3.374,11.906817,0.015800001,67.14890135143044,1.7042745614721713
+MNRO,Monro Muffler Brake,Consumer Cyclical,21.8,3.171,18.474577,0.053000003,36.719167802692475,1.586490594683384
+VIRC,Virco Manufacturing Corp.,Consumer Cyclical,13.51,2.582,8.660257,0.0046,54.90030016853647,1.4477087740614065
+SMP,Standard Motor Products,Consumer Cyclical,26.9,2.554,9.889706,0.0442,26.899959039772583,1.4101433487706252
+MLR,Miller Industries,Consumer Cyclical,55.26,2.182,9.643979,0.014099999,37.088647285906426,1.2450750869796063
+TM,Toyota Motor Corp Ltd Ord,Consumer Cyclical,205.58,1.939,9.020623,0.0199,39.46117242919897,1.196458591010152
+IHG,Intercontinental Hotels Group,Consumer Cyclical,106.51,2.168,24.151928,0.0146,61.90162323086156,1.1766475601447506
+HOFT,Hooker Furniture Corp.,Consumer Cyclical,13.47,1.968,34.538464,0.0696,40.18178492420572,1.0815282866377716
+DDS,Dillard's,Consumer Cyclical,441.51,1.497,10.038881,0.0023,46.74704391536923,0.9833342522219776
+PKG,Packaging Corporation Of America,Consumer Cyclical,179.18,1.622,22.3975,0.028399998,41.30042222741956,0.9832663248478364
+VBFC,Village Bank And Trust Financial,Financial Services,48.4999,7.064,33.680485,0.0153,49.96522482670578,2.776150686968226
+FCCO,First Community Corp.,Financial Services,17.36,6.112,12.055555,0.0342,68.37522583192089,2.5519572601334977
+PWOD,Penns Woods Bancorp,Financial Services,20.34,5.443,9.287671,0.0664,51.1984283753929,2.3898648757829477
+NEWT,Newtek Business Services Inc.,Financial Services,12.99,4.17,8.602649,0.060900003,50.687799578279055,1.913454936772933
+CFFI,C&F Financial Corp.,Financial Services,44.71,3.88,7.3657327,0.040900003,50.97988445917268,1.896907238046782
+TAIT,Taitron Components Inc.,Technology,2.85,4.779,10.555554,0.0731,64.8768498043591,2.2718253124180254
+EVTC,Evertec Inc. Common Stock,Technology,31.06,4.897,31.373737,0.0068,27.59543402859497,2.200638374232814
+ASML,Asml Holding N.V.,Technology,1093.435,3.157,56.073593,0.0063,57.81025058466553,1.526048975575536
+TSM,Taiwan Semiconductor Manufacturing,Technology,190.28,3.122,36.66281,0.0134000005,59.20225143608464,1.5257646772726008
+JBL,Jabil Circuit,Technology,113.285,2.977,10.279945,0.0029,53.88254429726215,1.5180540151367106
+IMOS,Chipmos Technologies [Bermuda] Ltd,Technology,26.5337,2.407,16.081032,0.0429,58.61835572334171,1.294636943537589
+ADI,Analog Devices,Technology,237.77,2.483,55.68384,0.0159,64.90727153020653,1.2394635411733899
+STM,Stmicroelectronics N.V.,Technology,42.3989,2.141,10.871512,0.0087,43.36464970117383,1.1726649559552782
+ELTK,Eltek Ltd,Technology,9.64,2.011,9.009346,0.023,25.37212737786037,1.1680540479669033
+ESE,Esco Technologies Inc.,Technology,109.21,2.218,28.664042,0.003,61.87823495681518,1.1491890137100258
+```
+Number of companies selected from each sector and return the response as the following format: 
+**TSM - Taiwan Semiconductor Manufacturing**
+- Sector: Technology
+- Current Close: $190.4999
+- Price Change (%): 3.241
+- P/E Ratio: 36.70518
+- Dividend Yield: 0.0134
+- RSI Score: 59.41760632875677
+- Score: 1.5730452000793327
+Write the analysis for each of the companies provided in the Data section.Basic Materials: 0
+Communication Services: 0
+Consumer Cyclical: 10
+Consumer Defensive: 0
+Energy: 0
+Financial Services: 5
+Healthcare: 0
+Industrials: 0
+Real Estate: 0
+Technology: 10
+Utilities: 0
+Other: 0
+
+<<< Grok Analyzing >>>
+Here is the analysis for each of the companies provided in the data section:
+
+**GPK - Graphic Packaging Holdings Company**
+- Sector: Consumer Cyclical
+- Current Close: $26.195
+- Price Change (%): 3.374
+- P/E Ratio: 11.906817
+- Dividend Yield: 0.0158
+- RSI Score: 67.14890135143044
+- Score: 1.7042745614721713
+- Analysis: GPK has a relatively low P/E ratio and a low dividend yield, which could make it an attractive target for acquisition. The high RSI score indicates strong momentum, and the company has a decent overall score.
+
+**MNRO - Monro Muffler Brake**
+- Sector: Consumer Cyclical
+- Current Close: $21.8
+- Price Change (%): 3.171
+- P/E Ratio: 18.474577
+- Dividend Yield: 0.053
+- RSI Score: 36.719167802692475
+- Score: 1.586490594683384
+- Analysis: MNRO has a relatively high P/E ratio and a decent dividend yield. The low RSI score suggests that the stock may be oversold, and the company has a moderate overall score.
+
+**VIRC - Virco Manufacturing Corp.**
+- Sector: Consumer Cyclical
+- Current Close: $13.51
+- Price Change (%): 2.582
+- P/E Ratio: 8.660257
+- Dividend Yield: 0.0046
+- RSI Score: 54.90030016853647
+- Score: 1.4477087740614065
+- Analysis: VIRC has a low P/E ratio and a very low dividend yield. The moderate RSI score suggests a neutral momentum, and the company has a moderate overall score.
+
+**SMP - Standard Motor Products**
+- Sector: Consumer Cyclical
+- Current Close: $26.9
+- Price Change (%): 2.554
+- P/E Ratio: 9.889706
+- Dividend Yield: 0.0442
+- RSI Score: 26.899959039772583
+- Score: 1.4101433487706252
+- Analysis: SMP has a low P/E ratio and a moderate dividend yield. The low RSI score suggests that the stock may be oversold, and the company has a moderate overall score.
+
+**MLR - Miller Industries**
+- Sector: Consumer Cyclical
+- Current Close: $55.26
+- Price Change (%): 2.182
+- P/E Ratio: 9.643979
+- Dividend Yield: 0.014099999
+- RSI Score: 37.088647285906426
+- Score: 1.2450750869796063
+- Analysis: MLR has a low P/E ratio and a very low dividend yield. The moderate RSI score suggests a neutral momentum, and the company has a moderate overall score.
+
+**TM - Toyota Motor Corp Ltd Ord**
+- Sector: Consumer Cyclical
+- Current Close: $205.58
+- Price Change (%): 1.939
+- P/E Ratio: 9.020623
+- Dividend Yield: 0.0199
+- RSI Score: 39.46117242919897
+- Score: 1.196458591010152
+- Analysis: TM has a low P/E ratio and a low dividend yield. The moderate RSI score suggests a neutral momentum, and the company has a moderate overall score.
+
+**IHG - Intercontinental Hotels Group**
+- Sector: Consumer Cyclical
+- Current Close: $106.51
+- Price Change (%): 2.168
+- P/E Ratio: 24.151928
+- Dividend Yield: 0.0146
+- RSI Score: 61.90162323086156
+- Score: 1.1766475601447506
+- Analysis: IHG has a relatively high P/E ratio and a very low dividend yield. The high RSI score indicates strong momentum, and the company has a moderate overall score.
+
+**HOFT - Hooker Furniture Corp.**
+- Sector: Consumer Cyclical
+- Current Close: $13.47
+- Price Change (%): 1.968
+- P/E Ratio: 34.538464
+- Dividend Yield: 0.0696
+- RSI Score: 40.18178492420572
+- Score: 1.0815282866377716
+- Analysis: HOFT has a high P/E ratio and a moderate dividend yield. The moderate RSI score suggests a neutral momentum, and the company has a moderate overall score.
+
+**DDS - Dillard's**
+- Sector: Consumer Cyclical
+- Current Close: $441.51
+- Price Change (%): 1.497
+- P/E Ratio: 10.038881
+- Dividend Yield: 0.0023
+- RSI Score: 46.74704391536923
+- Score: 0.9833342522219776
+- Analysis: DDS has a low P/E ratio and a very low dividend yield. The moderate RSI score suggests a neutral momentum, and the company has a moderate overall score.
+
+**PKG - Packaging Corporation Of America**
+- Sector: Consumer Cyclical
+- Current Close: $179.18
+- Price Change (%): 1.622
+- P/E Ratio: 22.3975
+- Dividend Yield: 0.028399998
+- RSI Score: 41.30042222741956
+- Score: 0.9832663248478364
+- Analysis: PKG has a relatively high P/E ratio and a low dividend yield. The moderate RSI score suggests a neutral momentum, and the company has a moderate overall score.
+
+**VBFC - Village Bank And Trust Financial**
+- Sector: Financial Services
+- Current Close: $48.4999
+- Price Change (%): 7.064
+- P/E Ratio: 33.680485
+- Dividend Yield: 0.0153
+- RSI Score: 49.96522482670578
+- Score: 2.776150686968226
+- Analysis: VBFC has a high P/E ratio and a very low dividend yield. The moderate RSI score suggests a neutral momentum, and the company has a high overall score.
+
+**FCCO - First Community Corp.**
+- Sector: Financial Services
+- Current Close: $17.36
+- Price Change (%): 6.112
+- P/E Ratio: 12.055555
+- Dividend Yield: 0.0342
+- RSI Score: 68.37522583192089
+- Score: 2.5519572601334977
+- Analysis: FCCO has a moderate P/E ratio and a moderate dividend yield. The high RSI score indicates strong momentum, and the company has a high overall score.
+
+**PWOD - Penns Woods Bancorp**
+- Sector: Financial Services
+- Current Close: $20.34
+- Price Change (%): 5.443
+- P/E Ratio: 9.287671
+- Dividend Yield: 0.0664
+- RSI Score: 51.1984283753929
+- Score: 2.3898648757829477
+- Analysis: PWOD has a low P/E ratio and a moderate dividend yield. The moderate RSI score suggests a neutral momentum, and the company has a high overall score.
+
+**NEWT - Newtek Business Services Inc.**
+- Sector: Financial Services
+- Current Close: $12.99
+- Price Change (%): 4.17
+- P/E Ratio: 8.602649
+- Dividend Yield: 0.060900003
+- RSI Score: 50.687799578279055
+- Score: 1.913454936772933
+- Analysis: NEWT has a low P/E ratio and a moderate dividend yield. The moderate RSI score suggests a neutral momentum, and the company has a moderate overall score.
+
+**CFFI - C&F Financial Corp.**
+- Sector: Financial Services
+- Current Close: $44.71
+- Price Change (%): 3.88
+- P/E Ratio: 7.3657327
+- Dividend Yield: 0.040900003
+- RSI Score: 50.97988445917268
+- Score: 1.896907238046782
+- Analysis: CFFI has a low P/E ratio and a moderate dividend yield. The moderate RSI score suggests a neutral momentum, and the company has a moderate overall score.
+
+**TAIT - Taitron Components Inc.**
+- Sector: Technology
+- Current Close: $2.85
+- Price Change (%): 4.779
+- P/E Ratio: 10.555554
+- Dividend Yield: 0.0731
+- RSI Score: 64.8768498043591
+- Score: 2.2718253124180254
+- Analysis: TAIT has a moderate P/E ratio and a moderate dividend yield. The high RSI score indicates strong momentum, and the company has a high overall score.
+
+**EVTC - Evertec Inc. Common Stock**
+- Sector: Technology
+- Current Close: $31.06
+- Price Change (%): 4.897
+- P/E Ratio: 31.373737
+- Dividend Yield: 0.0068
+- RSI Score:
