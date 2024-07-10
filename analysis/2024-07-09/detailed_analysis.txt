@@ -1,0 +1,72 @@
+Scoring Formulas for Each Sector:
+
+Technology Sector:
+Score = (Price Change (%) * 0.35) + 
+        (Beta_normalized * 0.15) + 
+        ((15 / P/E Ratio) * 0.05) + 
+        (Market Cap_normalized * 0.15) + 
+        (Dividend Yield_normalized * 0.05) + 
+        ((1 - |RSI Score_normalized - 0.7|) * 0.25)
+
+Financial Services Sector:
+Score = (Price Change (%) * 0.30) + 
+        (Beta_normalized * 0.15) + 
+        ((15 / P/E Ratio) * 0.15) + 
+        (Market Cap_normalized * 0.10) + 
+        (Dividend Yield_normalized * 0.10) + 
+        ((1 - |RSI Score_normalized - 0.7|) * 0.20)
+
+Consumer Cyclical Sector:
+Score = (Price Change (%) * 0.35) + 
+        (Beta_normalized * 0.20) + 
+        ((15 / P/E Ratio) * 0.10) + 
+        (Market Cap_normalized * 0.05) + 
+        (Dividend Yield_normalized * 0.10) + 
+        ((1 - |RSI Score_normalized - 0.7|) * 0.20)
+
+Other Sector:
+Score = (Price Change (%) * 0.30) + 
+        (Beta_normalized * 0.15) + 
+        ((15 / P/E Ratio) * 0.15) + 
+        (Market Cap_normalized * 0.10) + 
+        (Dividend Yield_normalized * 0.10) + 
+        ((1 - |RSI Score_normalized - 0.7|) * 0.20)
+
+Top Stock Recommendations by Sector:
+
+Technology Sector Top 10 Stocks:
+Ticker                            Company     Sector  Current Close  Price Change (%)  P/E Ratio  Dividend Yield  RSI Score    score
+   ESE             Esco Technologies Inc. Technology        106.840             4.072  28.041994          0.0031  55.167827 1.675135
+   JKS Jinkosolar Holding Company Limited Technology         21.670             2.604   3.069405          0.0710  45.517946 1.486674
+  CGNX                       Cognex Corp. Technology         48.460             2.452  85.017540          0.0063  63.571100 1.053536
+  TAIT            Taitron Components Inc. Technology          2.735             1.673  10.129629          0.0740  52.403100 0.935195
+  ELTK                          Eltek Ltd Technology          9.560             1.594   8.934580          0.0233  22.253296 0.855551
+   ASX Advanced Semiconductor Engineering Technology         11.960             1.528  24.408163          0.0272  63.477273 0.774032
+ BELFA                      Bel Fuse Inc. Technology         82.470             1.203  14.674377          0.0029  60.062438 0.682579
+  MNDO                    Mind C.T.I. Ltd Technology          1.900             0.529   7.600000          0.1270  49.407872 0.568943
+  LRCX                 Lam Research Corp. Technology       1112.550             0.993  40.887543          0.0073  68.543320 0.546570
+   APH                     Amphenol Corp. Technology         68.620             0.927  42.098160          0.0129  66.363722 0.534000
+
+Consumer Cyclical Sector Top 10 Stocks:
+Ticker                     Company            Sector  Current Close  Price Change (%)  P/E Ratio  Dividend Yield  RSI Score    score
+  WEYS                 Weyco Group Consumer Cyclical          29.75             1.640   9.659091          0.0355  59.547741 1.024066
+   AEO   American Eagle Outfitters Consumer Cyclical          20.17             1.766  18.171171          0.0252  51.903549 0.949918
+   MED                Medifast Inc Consumer Cyclical          18.41            -0.540   2.974152          0.3566  47.125171 0.809475
+  WINA               Winmark Corp. Consumer Cyclical         355.00             1.168  32.420094          0.0103  69.259104 0.683656
+   DDS                   Dillard's Consumer Cyclical         435.00             0.611   9.893108          0.0023  41.326474 0.642292
+   BWA             Borgwarner Inc. Consumer Cyclical          31.66             0.732  10.879725          0.0140  23.964320 0.622514
+  HTHT China Lodging Group Limited Consumer Cyclical          31.06             0.681  19.534590          0.0201  13.723563 0.524527
+   SGC      Superior Uniform Group Consumer Cyclical          19.07             0.740  26.486109          0.0296  19.424448 0.501457
+   HOG             Harley-Davidson Consumer Cyclical          31.83             0.000   6.995604          0.0217  25.933401 0.462736
+   LVS             Las Vegas Sands Consumer Cyclical          41.62             0.410  20.106280          0.0193  22.602545 0.428228
+
+Financial Services Sector Top 0 Stocks:
+Empty DataFrame
+Columns: [Ticker, Company, Sector, Current Close, Price Change (%), P/E Ratio, Dividend Yield, RSI Score, score]
+Index: []
+
+Other Sector Top 0 Stocks:
+Empty DataFrame
+Columns: [Ticker, Company, Sector, Current Close, Price Change (%), P/E Ratio, Dividend Yield, RSI Score, score]
+Index: []
+

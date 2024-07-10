@@ -3,110 +3,132 @@ import numpy as np
 
 def score_stocks(df):
     """
-    Score stocks based on various financial metrics.
-
-    This function normalizes several key financial indicators and combines them
-    into a single composite score. Higher scores indicate potentially more
-    attractive stocks based on the given criteria.
-
-    Args:
-        df (pd.DataFrame): DataFrame containing stock data with required columns.
-
-    Returns:
-        pd.DataFrame: The input DataFrame with additional columns for normalized
-                      metrics and a composite score, sorted by score in descending order.
+    Score stocks based on various financial metrics, using raw values for P/E ratio and price change.
+    Applies sector-specific scoring for all sectors.
     """
     # Define the columns we'll use for scoring
-    numerical_cols = ['Price Change (%)', 'Beta', 'P/E Ratio', 'Market Cap', 'Dividend Yield', 'RSI Score']
+    numerical_cols = ['Price Change (%)', 'Beta', 'P/E Ratio', 'Market Cap', 'Dividend Yield', 'RSI Score', 'Sector']
     
-    # Normalize numerical columns
-    for col in numerical_cols:
-        df[col] = pd.to_numeric(df[col], errors='coerce')
+    # Remove stocks with any missing values in the relevant columns
+    df_complete = df.dropna(subset=numerical_cols).copy()  # Create an explicit copy
+    
+    # Normalize numerical columns (except P/E Ratio and Price Change)
+    for col in ['Beta', 'Market Cap', 'Dividend Yield', 'RSI Score']:
+        df_complete[col] = pd.to_numeric(df_complete[col], errors='coerce')
         
-        # Calculate min and max, ignoring NaN values
-        col_min = df[col].min()
-        col_max = df[col].max()
+        # Calculate min and max
+        col_min = df_complete[col].min()
+        col_max = df_complete[col].max()
         
         # Normalize the column, handling potential division by zero
         if col_max - col_min != 0:
-            df[f'{col}_normalized'] = (df[col] - col_min) / (col_max - col_min)
+            df_complete.loc[:, f'{col}_normalized'] = (df_complete[col] - col_min) / (col_max - col_min)
         else:
-            df[f'{col}_normalized'] = 0.5  # Use 0.5 as a neutral value
+            df_complete.loc[:, f'{col}_normalized'] = 0.5  # Use 0.5 as a neutral value
 
-    # Create a composite score with adjusted weights and logic
-    df['score'] = (
-        df['Price Change (%)_normalized'].fillna(0) * 0.15 +  # Recent performance
-        (1 - df['Beta_normalized'].fillna(0.5)) * 0.1 +       # Lower beta is better
-        (1 - df['P/E Ratio_normalized'].fillna(1)) * 0.25 +   # Lower P/E is better
-        df['Market Cap_normalized'].fillna(0) * 0.1 +         # Larger companies
-        df['Dividend Yield_normalized'].fillna(0) * 0.2 +     # Higher dividend yield
-        (df['RSI Score_normalized'].fillna(0.5) - 0.5).abs() * -0.2  # Prefer RSI closer to 50
-    )
+    # Ensure P/E Ratio and Price Change are numeric
+    df_complete['P/E Ratio'] = pd.to_numeric(df_complete['P/E Ratio'], errors='coerce')
+    df_complete['Price Change (%)'] = pd.to_numeric(df_complete['Price Change (%)'], errors='coerce')
+
+    # Apply sector-specific scoring
+    df_complete['score'] = df_complete.apply(lambda row: calculate_score(row), axis=1)
     
-    return df.sort_values('score', ascending=False)
+    return df_complete.sort_values('score', ascending=False)
 
-def get_buy_recommendations(df, top_n=10):
+def calculate_score(row):
+    """Calculate the score for a single stock based on its sector."""
+    weights = sector_weights.get(row['Sector'], sector_weights['Other'])
+    
+    return (
+        row['Price Change (%)'] * weights['price_change'] +
+        (1 - row['Beta_normalized']) * weights['beta'] +
+        (20 / row['P/E Ratio']) * weights['pe_ratio'] +
+        row['Market Cap_normalized'] * weights['market_cap'] +
+        row['Dividend Yield_normalized'] * weights['dividend_yield'] +
+        (0.5 - abs(row['RSI Score_normalized'] - 0.5)) * weights['rsi']
+    )
+def get_buy_recommendations(df, sector_counts):
     """
-    Get top stock buy recommendations based on composite scores and additional filters.
-
-    This function applies the scoring system and then filters the results to
-    exclude highly volatile stocks, stocks with negative P/E ratios, and
-    overbought stocks based on RSI.
-
-    Args:
-        df (pd.DataFrame): DataFrame containing stock data.
-        top_n (int): Number of top recommendations to return. Default is 10.
-
-    Returns:
-        pd.DataFrame: A DataFrame containing the top N recommended stocks
-                      with key metrics and scores.
+    Get top stock buy recommendations based on user-specified counts for each sector.
     """
     scored_df = score_stocks(df)
     
-    # Add some additional filters
-    recommendations = scored_df[
-        (scored_df['Beta'] < 1.5) &  # Filter out extremely volatile stocks
-        (scored_df['P/E Ratio'] > 0) &  # Filter out negative P/E ratios
-        (scored_df['RSI Score'] < 70)  # Avoid overbought stocks
-    ].head(top_n)
-    
-    return recommendations[['Ticker', 'Company', 'Current Close', 'Price Change (%)', 'P/E Ratio', 'Dividend Yield', 'RSI Score', 'score']]
+    recommendations = pd.DataFrame()
 
-def analyze_recommendations(df):
+    for category, top_n in sector_counts.items():
+        if category != 'Other':
+            category_df = scored_df[scored_df['Sector'] == category]
+        else:
+            category_df = scored_df[~scored_df['Sector'].isin(['Technology', 'Financial Services', 'Consumer Cyclical'])]
+        
+        category_recommendations = category_df[
+            (category_df['Beta'] < 1.5) &  # Filter out extremely volatile stocks
+            (category_df['P/E Ratio'] > 0) &  # Filter out negative P/E ratios
+            (category_df['RSI Score'] < 70)  # Avoid overbought stocks
+        ].head(top_n)
+        recommendations = pd.concat([recommendations, category_recommendations])
+
+    return recommendations[['Ticker', 'Company', 'Sector', 'Current Close', 'Price Change (%)', 'P/E Ratio', 'Dividend Yield', 'RSI Score', 'score']]
+
+def analyze_recommendations(df, sector_counts):
     """
-    Provide a detailed analysis of the top stock recommendations.
-
-    This function generates a formatted string containing an analysis of each
-    recommended stock, including key metrics and additional insights based on
-    P/E ratio and RSI values.
-
-    Args:
-        df (pd.DataFrame): DataFrame containing stock data.
-
-    Returns:
-        str: A formatted string containing the analysis of top stock recommendations.
+    Provide a detailed analysis of the top stock recommendations for each specified sector.
     """
-    recommendations = get_buy_recommendations(df)
+    recommendations = get_buy_recommendations(df, sector_counts)
     
-    analysis = f"Top {len(recommendations)} Stock Recommendations:\n\n"
+    analysis = "Scoring Formulas for Each Sector:\n\n"
+    for sector, weights in sector_weights.items():
+        analysis += f"{sector} Sector:\n"
+        analysis += f"Score = (Price Change (%) * {weights['price_change']:.2f}) + \n"
+        analysis += f"        (Beta_normalized * {weights['beta']:.2f}) + \n"
+        analysis += f"        ((15 / P/E Ratio) * {weights['pe_ratio']:.2f}) + \n"
+        analysis += f"        (Market Cap_normalized * {weights['market_cap']:.2f}) + \n"
+        analysis += f"        (Dividend Yield_normalized * {weights['dividend_yield']:.2f}) + \n"
+        analysis += f"        ((1 - |RSI Score_normalized - 0.7|) * {weights['rsi']:.2f})\n\n"
+
+    analysis += "Top Stock Recommendations by Sector:\n\n"
     
-    for _, stock in recommendations.iterrows():
-        analysis += f"{stock['Ticker']} - {stock['Company']}:\n"
-        analysis += f"  Current Price: ${stock['Current Close']:.2f}\n"
-        analysis += f"  Price Change: {stock['Price Change (%)']:.2f}%\n"
-        analysis += f"  P/E Ratio: {stock['P/E Ratio']:.2f}\n"
-        analysis += f"  Dividend Yield: {stock['Dividend Yield']*100:.2f}%\n"
-        analysis += f"  RSI: {stock['RSI Score']:.2f}\n"
-        analysis += f"  Score: {stock['score']:.4f}\n\n"
-        
-        if stock['RSI Score'] < 30:
-            analysis += "  Note: This stock may be oversold based on its low RSI.\n"
-        elif stock['RSI Score'] > 60:
-            analysis += "  Note: This stock is approaching overbought territory.\n"
-        
-        if stock['P/E Ratio'] < 15:
-            analysis += "  Note: This stock has a relatively low P/E ratio, which could indicate it's undervalued.\n"
-        
-        analysis += "\n"
+    for sector, count in sector_counts.items():
+        sector_recommendations = recommendations[recommendations['Sector'] == sector]
+        analysis += f"{sector} Sector Top {count} Stocks:\n"
+        table = sector_recommendations.to_string(index=False)
+        analysis += table + "\n\n"
     
     return analysis
+
+# Global variable for sector weights
+# Global variable for sector weights
+sector_weights = {
+    'Technology': {
+        'price_change': 0.35,  # Increased
+        'beta': 0.15,          # Increased
+        'pe_ratio': 0.05,      # Decreased
+        'market_cap': 0.15,    # Decreased
+        'dividend_yield': 0.05,# Kept low
+        'rsi': 0.25            # Increased
+    },
+    'Financial Services': {
+        'price_change': 0.30,  # Increased
+        'beta': 0.15,          # Increased
+        'pe_ratio': 0.15,      # Decreased
+        'market_cap': 0.10,    # Decreased
+        'dividend_yield': 0.10,# Decreased
+        'rsi': 0.20            # Increased
+    },
+    'Consumer Cyclical': {
+        'price_change': 0.35,  # Increased
+        'beta': 0.20,          # Increased
+        'pe_ratio': 0.10,      # Decreased
+        'market_cap': 0.05,    # Decreased
+        'dividend_yield': 0.10,# Decreased
+        'rsi': 0.20            # Increased
+    },
+    'Other': {
+        'price_change': 0.30,  # Increased
+        'beta': 0.15,          # Increased
+        'pe_ratio': 0.15,      # Decreased
+        'market_cap': 0.10,    # Decreased
+        'dividend_yield': 0.10,# Decreased
+        'rsi': 0.20            # Increased
+    }
+}

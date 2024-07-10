@@ -1,19 +1,15 @@
-import pandas as pd
 import asyncio
-import multiprocessing
-import time
-from src.stock_info import evaluate, mkdir
-from src.buy import get_buy_recommendations, analyze_recommendations
-from src.grok import grok
+import pandas as pd
 from src.query import query
+from src.grok import grok
+from src.buy import get_buy_recommendations, analyze_recommendations
+
+
 
 async def main():
-    print('\n<<< Stocks data fetching >>>')
-    start_time = time.time()
-    df = evaluate()
-    end_time = time.time()
-    print(f"Fetching time: {end_time - start_time}\n\n")
+    today = pd.Timestamp('today').date()
 
+    df = pd.read_csv(f"analysis/{str(today)}/processed_tickers.csv")
 
     print("<<< # from each Sectors >>>\n")
     # Get user input for number of companies from each sector
@@ -33,12 +29,6 @@ async def main():
     # Get top recommendations
     top_stocks = get_buy_recommendations(df, sector_counts)
     
-    today = pd.Timestamp('today').date()
-    mkdir(f"analysis/{str(today)}")
-    
-    # Save all processed tickers
-    all_tickers_file = f'analysis/{str(today)}/processed_tickers.csv'
-    df.to_csv(all_tickers_file, index=False)
 
     # Save top stocks
     top_stocks_file = f'analysis/{str(today)}/top_stocks.csv'
@@ -61,5 +51,4 @@ async def main():
     print('\n')
 
 if __name__ == '__main__':
-    multiprocessing.freeze_support()  # This is necessary for Windows compatibility
     asyncio.run(main())
